@@ -3,9 +3,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -109,6 +107,7 @@ namespace Project2
             services.AddTransient<IValidator<RegisterRequest>, RegisterRequestValidator>();
 
             services.AddTransient<IAuthManagementService, AuthManagementService>();// or add scope
+            services.AddTransient<IFilmService, FilmService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

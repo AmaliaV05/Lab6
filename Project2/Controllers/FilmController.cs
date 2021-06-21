@@ -4,13 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Project2.Data;
 using Project2.Models;
 using Project2.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Project2.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace Project2.Controllers
 {
@@ -19,13 +18,13 @@ namespace Project2.Controllers
     [ApiController]
     public class FilmController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private IFilmService _filmService;
         private readonly IMapper _mapper;
         private readonly ILogger<FilmController> _logger;
 
-        public FilmController(ApplicationDbContext context, IMapper mapper, ILogger<FilmController> logger)
+        public FilmController(IFilmService filmService, IMapper mapper, ILogger<FilmController> logger)
         {
-            _context = context;
+            _filmService = filmService;
             _mapper = mapper;
             _logger = logger;
         }
@@ -39,7 +38,9 @@ namespace Project2.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Film>>> GetFilms()
         {
-            return await _context.Films.ToListAsync();
+            var films = await _filmService.GetAllFilms();
+            
+           return films.ToList();
         }
 
         /// <summary>
@@ -49,9 +50,11 @@ namespace Project2.Controllers
         /// <returns>Returns film by id</returns>
         // GET: api/Film/5
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<FilmViewModel>> GetFilm(int id)
         {
-            var film = await _context.Films.FindAsync(id);
+            var film = await _filmService.GetFilmById(id);
 
             if (film == null)
             {
@@ -73,31 +76,14 @@ namespace Project2.Controllers
         [HttpGet("{id}/Comments")]
         public ActionResult<IEnumerable<FilmWithCommentViewModel>> GetCommentsForFilm(int id)
         {
-            /*var query_v1 = _context.Comments.Where(c => c.Film.Id == id)
-                .Include(c => c.Film)
-                .Select(c => new FilmWithCommentViewModel
-                {
-                    Id = c.Film.Id,
-                    Title = c.Film.Title,
-                    Description = c.Film.Description,
-                    Rating = c.Film.Rating,
-                    Watched = c.Film.Watched,
-                    Comments = c.Film.Comments.Select(fc => new CommentViewModel
-                    {
-                        Id = fc.Id,
-                        Text = fc.Text,
-                        Important = fc.Important
-                    })
-                });*/
-            
-            var query_v2 = _context.Films
-                .Where(f => f.Id == id)
-                .Include(f => f.Comments)
-                .Select(f => _mapper.Map<FilmWithCommentViewModel>(f));
+            var query_v2 = _filmService.GetAllCommentsForFilm(id);
 
-            _logger.LogInformation(query_v2.ToQueryString());
+            if (query_v2 == null)
+            {
+                return NotFound();
+            }
 
-            return query_v2.ToList();
+            return Ok();
         }
 
         /// <summary>
@@ -111,11 +97,16 @@ namespace Project2.Controllers
         [Route("filter/{firstDate, lastDate}")]
         public ActionResult<IEnumerable<FilmViewModel>> FilterFilms(DateTime firstDate, DateTime lastDate)
         {
-            var filmViewModelList = _context.Films.Select(film => _mapper.Map<FilmViewModel>(film)).ToList();
+            var filteredFilms = _filmService.GetAllFilmsBetweenDates(firstDate, lastDate);
 
-            var filmListSorted = filmViewModelList.Where(film => film.DateAdded >= firstDate && film.DateAdded <= lastDate).ToList();
+            if (filteredFilms == null)
+            {
+                return NotFound();
+            }
 
-            return filmListSorted.OrderByDescending(film => film.YearOfRelease).ToList();
+            var filteredFilmsViewModel = _mapper.Map<FilmViewModel>(filteredFilms);
+
+            return Ok(filteredFilmsViewModel);
         }
 
         /// <summary>
@@ -128,11 +119,14 @@ namespace Project2.Controllers
         [Route("filter-genre/{genre}")]
         public ActionResult<IEnumerable<FilmViewModel>> FilterFilmsByGenre(Genre genre)
         {
-            var filmViewModelList = _context.Films.Select(film => _mapper.Map<FilmViewModel>(film)).ToList();
+            var filteredFilms = _filmService.FilterFilmsByGenre(genre);
 
-            var filmListSorted = filmViewModelList.Where(film => film.Genre == genre).ToList();
+            if (filteredFilms == null)
+            {
+                return NotFound();
+            }
 
-            return filmListSorted.OrderByDescending(film => film.YearOfRelease).ToList();
+            return Ok();
         }
 
         /// <summary>
@@ -153,27 +147,11 @@ namespace Project2.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(film).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FilmExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _filmService.PutFilm(id, film);
 
             return NoContent();
         }
-        
+
         /// <summary>
         /// Update a comment from film by film id and comment id NOT WORKING
         /// </summary>
@@ -186,38 +164,14 @@ namespace Project2.Controllers
         [HttpPut("{idFilm}/Comments/{idComment}")]
         public async Task<IActionResult> PutComment(int idFilm, int idComment, CommentViewModel commentViewModel)
         {
-            var film = _context.Films.Where(p => p.Id == idFilm)
-                                    .Include(p => p.Comments)
-                                    .FirstOrDefault();
-            var com = _mapper.Map<Comment>(commentViewModel);
+            var comment = _mapper.Map<Comment>(commentViewModel);
 
-            /*if (idFilm != film.Id)
-            {
-                return BadRequest();
-            }*/
-
-            if (idComment != com.Id)
+            if (idComment != comment.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(com).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FilmExists(idFilm) || (FilmExists(idFilm) && !CommentExists(idComment)))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _filmService.PutComment(idFilm, idComment, comment);
 
             return NoContent();
         }
@@ -232,9 +186,9 @@ namespace Project2.Controllers
         [HttpPost]
         public async Task<ActionResult<FilmViewModel>> PostFilm(FilmViewModel filmRequest)
         {
-            Film film = _mapper.Map<Film>(filmRequest);
-            _context.Films.Add(film);
-            await _context.SaveChangesAsync();
+            var film = _mapper.Map<Film>(filmRequest);
+
+            await _filmService.PostFilm(film);
 
             return CreatedAtAction("GetFilm", new { id = film.Id }, film);
         }
@@ -249,24 +203,13 @@ namespace Project2.Controllers
         [HttpPost("{id}/Comments")]
         public IActionResult PostCommentForFilm(int id, Comment comment)
         {
-            var film = _context.Films.Where(p => p.Id == id)
-                                    .Include(p => p.Comments)
-                                    .FirstOrDefault();
-            if(film == null)
-            {
-                return NotFound();
-            }
-            film.Comments.Add(comment);
-            _context.Entry(film).State = EntityState.Modified;
-            _context.SaveChanges();
+            var film = _filmService.PostCommentForFilm(id, comment);
 
-            /*comment.Film = _context.Films.Find(id);
-            if(comment.Film == null)
+            if (film == false)
             {
                 return NotFound();
             }
-            _context.Comments.Add(comment);
-            _context.SaveChanges();*/
+
             return Ok();
         }
 
@@ -279,14 +222,11 @@ namespace Project2.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFilm(int id)
         {
-            var film = await _context.Films.FindAsync(id);
-            if (film == null)
+            var check = await _filmService.DeleteFilm(id);
+            if (check == false)
             {
                 return NotFound();
             }
-
-            _context.Films.Remove(film);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -301,33 +241,14 @@ namespace Project2.Controllers
         [HttpDelete("{idFilm}/Comments/{idComment}")]
         public async Task<IActionResult> DeleteComment(int idFilm, int idComment)
         {
-            var film = await _context.Films.FindAsync(idFilm);
-            var comment = await _context.Comments.FindAsync(idComment);
+            var check = await _filmService.DeleteComment(idFilm, idComment);
 
-            if (film == null)
+            if (check == false)
             {
                 return NotFound();
             }
-
-            if(comment == null)
-            {
-                return NotFound();
-            }
-
-            _context.Comments.Remove(comment);
-            await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool FilmExists(int id)
-        {
-            return _context.Films.Any(e => e.Id == id);
-        }
-
-        private bool CommentExists(int id)
-        {
-            return _context.Comments.Any(e => e.Id == id);
         }
     }
 }

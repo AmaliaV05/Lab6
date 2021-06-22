@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Project2.Data;
 using Project2.Models;
 using Project2.ViewModels.Reservations;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -41,7 +40,7 @@ namespace Project2.Controllers
         [HttpPost]
         public async Task<ActionResult> MakeReservation(NewReservationRequest newReservationRequest)
         {
-            var user = await _userManager.FindByEmailAsync(User.FindFirst(ClaimTypes.Email).Value);
+            var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             List<Film> reservedFilms = new List<Film>();
             newReservationRequest.ReservedFilmsIds.ForEach(fid =>

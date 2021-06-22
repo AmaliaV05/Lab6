@@ -1,10 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
 using Project2.Data;
 using Project2.Models;
-using Project2.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,13 +61,6 @@ namespace Project2.Services
 
         public async Task<bool> PutFilm(int id, Film film)
         {
-            //var film = _mapper.Map<Film>(filmViewModel);
-
-           /* if (id != film.Id)
-            {
-                return false;
-            }*/
-
             _context.Entry(film).State = EntityState.Modified;
 
             try

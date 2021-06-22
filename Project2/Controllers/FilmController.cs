@@ -36,6 +36,8 @@ namespace Project2.Controllers
         // GET: api/Film
         [AllowAnonymous]
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<Film>>> GetFilms()
         {
             var films = await _filmService.GetAllFilms();
@@ -67,7 +69,7 @@ namespace Project2.Controllers
         }
 
         /// <summary>
-        /// Get all comments from a film by film id
+        /// Get all comments from a film by film id NU MERGE
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Returs a list of comments</returns>
@@ -76,24 +78,29 @@ namespace Project2.Controllers
         [HttpGet("{id}/Comments")]
         public ActionResult<IEnumerable<FilmWithCommentViewModel>> GetCommentsForFilm(int id)
         {
-            var query_v2 = _filmService.GetAllCommentsForFilm(id);
+            var query = _filmService.GetAllCommentsForFilm(id);            
 
-            if (query_v2 == null)
+            if (query == null)
             {
                 return NotFound();
             }
 
-            return Ok();
+            //_logger.LogInformation(queryViewModel.ToQueryString());
+
+            var queryViewModel = _mapper.Map<IEnumerable<FilmWithCommentViewModel>>(query).ToList();
+            //_logger.LogInformation(queryViewModel.ToQueryString());
+            return queryViewModel;
         }
 
         /// <summary>
-        /// Gets all films between added dates
+        /// Gets all films between added dates NU MERGE
         /// </summary>
         /// <param name="firstDate"></param>
         /// <param name="lastDate"></param>
         /// <returns>Returns all films between two added dates if they are given, else returns all films</returns>
         // GET: api/Film/filter/{firstDate, lastDate}
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("filter/{firstDate, lastDate}")]
         public ActionResult<IEnumerable<FilmViewModel>> FilterFilms(DateTime firstDate, DateTime lastDate)
         {
@@ -104,9 +111,9 @@ namespace Project2.Controllers
                 return NotFound();
             }
 
-            var filteredFilmsViewModel = _mapper.Map<FilmViewModel>(filteredFilms);
+            var filteredFilmsViewModel = _mapper.Map<IEnumerable<FilmViewModel>>(filteredFilms).ToList();
 
-            return Ok(filteredFilmsViewModel);
+            return filteredFilmsViewModel;
         }
 
         /// <summary>
@@ -116,17 +123,21 @@ namespace Project2.Controllers
         /// <returns>All films by a specific genre in descending order by year of release</returns>
         [AllowAnonymous]
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("filter-genre/{genre}")]
         public ActionResult<IEnumerable<FilmViewModel>> FilterFilmsByGenre(Genre genre)
         {
-            var filteredFilms = _filmService.FilterFilmsByGenre(genre);
+            var filteredFilms = _filmService.FilterFilmsByGenre(genre);            
 
             if (filteredFilms == null)
             {
                 return NotFound();
             }
 
-            return Ok();
+            var filmsViewModel = _mapper.Map<IEnumerable<FilmViewModel>>(filteredFilms).ToList();
+
+            return filmsViewModel;
         }
 
         /// <summary>

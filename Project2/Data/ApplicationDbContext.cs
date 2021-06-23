@@ -3,10 +3,6 @@ using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Project2.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Project2.Data
 {
@@ -16,7 +12,7 @@ namespace Project2.Data
             DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
-        }        
+        }
         public DbSet<Film> Films { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }

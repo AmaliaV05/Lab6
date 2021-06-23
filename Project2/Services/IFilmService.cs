@@ -14,10 +14,10 @@ namespace Project2.Services
         IEnumerable<Film> GetAllFilmsBetweenDates(DateTime firstDate, DateTime lastDate);
         IEnumerable<Film> FilterFilmsByGenre(Genre genre);
         Task<bool> PutFilm(int id, Film film);
-        Task<bool> PutComment(int idFilm, int idComment, Comment comment);
+        Task<bool> PutComment(int idFilm, long idComment, Comment comment);
         Task<Film> PostFilm(Film filmRequest);
         bool PostCommentForFilm(int id, Comment comment);
         Task<bool> DeleteFilm(int id);
-        Task<bool> DeleteComment(int idFilm, int idComment);
+        Task<bool> DeleteComment(int idFilm, long idComment);
     }
 }

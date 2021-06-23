@@ -69,7 +69,7 @@ namespace Project2.Controllers
         }
 
         /// <summary>
-        /// Get all comments from a film by film id NU MERGE
+        /// Get all comments from a film by film id
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Returs a list of comments</returns>
@@ -93,7 +93,7 @@ namespace Project2.Controllers
         }
 
         /// <summary>
-        /// Gets all films between added dates NU MERGE
+        /// Gets all films between added dates
         /// </summary>
         /// <param name="firstDate"></param>
         /// <param name="lastDate"></param>
@@ -101,6 +101,7 @@ namespace Project2.Controllers
         // GET: api/Film/filter/{firstDate, lastDate}
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("filter/{firstDate, lastDate}")]
         public ActionResult<IEnumerable<FilmViewModel>> FilterFilms(DateTime firstDate, DateTime lastDate)
         {
@@ -164,7 +165,7 @@ namespace Project2.Controllers
         }
 
         /// <summary>
-        /// Update a comment from film by film id and comment id NOT WORKING
+        /// Update a comment from film by film id and comment id
         /// </summary>
         /// <param name="idFilm"></param>
         /// <param name="idComment"></param>
@@ -173,7 +174,7 @@ namespace Project2.Controllers
         // PUT: api/Film/5/Comment/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{idFilm}/Comments/{idComment}")]
-        public async Task<IActionResult> PutComment(int idFilm, int idComment, CommentViewModel commentViewModel)
+        public async Task<IActionResult> PutComment(int idFilm, long idComment, CommentViewModel commentViewModel)
         {
             var comment = _mapper.Map<Comment>(commentViewModel);
 
@@ -243,14 +244,14 @@ namespace Project2.Controllers
         }
 
         /// <summary>
-        /// Delete a comment from a film by film id and comment id NOT WORKING
+        /// Delete a comment from a film by film id and comment id
         /// </summary>
         /// <param name="idFilm"></param>
         /// <param name="idComment"></param>
         /// <returns>No content result</returns>
         // DELETE: api/Film/5/Comment/5
         [HttpDelete("{idFilm}/Comments/{idComment}")]
-        public async Task<IActionResult> DeleteComment(int idFilm, int idComment)
+        public async Task<IActionResult> DeleteComment(int idFilm, long idComment)
         {
             var check = await _filmService.DeleteComment(idFilm, idComment);
 

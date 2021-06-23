@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Project2.Data;
-using Project2.Models;
+using Project2.Services;
 using Project2.ViewModels.Reservations;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -19,17 +17,15 @@ namespace Project2.Controllers
     [Route("api/[controller]")]
     public class ReservationController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
         private readonly ILogger<ReservationController> _logger;
         private readonly IMapper _mapper;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private IReservationService _reservationService;
 
-        public ReservationController(ApplicationDbContext context, ILogger<ReservationController> logger, IMapper mapper, UserManager<ApplicationUser> userManager)
+        public ReservationController(ILogger<ReservationController> logger, IMapper mapper,IReservationService reservationService)
         {
-            _context = context;
             _logger = logger;
             _mapper = mapper;
-            _userManager = userManager;
+            _reservationService = reservationService;
         }
 
         /// <summary>
@@ -38,34 +34,18 @@ namespace Project2.Controllers
         /// <param name="newReservationRequest"></param>
         /// <returns>returns Ok if reservation is successful, else Bad Request</returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> MakeReservation(NewReservationRequest newReservationRequest)
         {
-            var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            List<Film> reservedFilms = new List<Film>();
-            newReservationRequest.ReservedFilmsIds.ForEach(fid =>
-            {
-                var filmWithId = _context.Films.Find(fid);
-                if(filmWithId != null)
-                {
-                    reservedFilms.Add(filmWithId);
-                }
-            });
-
-            if(reservedFilms.Count == 0)
+            //var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var query = await _reservationService.MakeReservation(newReservationRequest);
+            
+            if(query == false)
             {
                 return BadRequest();
             }
-
-            var reservation = new Reservation
-            {
-                ApplicationUser = user,
-                Films = reservedFilms,
-                ReservationDateTime = newReservationRequest.ReservationDateTime.GetValueOrDefault()
-            };
-
-            _context.Reservations.Add(reservation);
-            await _context.SaveChangesAsync();
+            
             return Ok();
         }
 
@@ -74,11 +54,11 @@ namespace Project2.Controllers
         /// </summary>
         /// <returns>Returns all revservations</returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> GetAll()
         {
-            var user = await _userManager.FindByEmailAsync(User.FindFirst(ClaimTypes.Email).Value);
-
-            var result = _context.Reservations.Where(r => r.ApplicationUser.Id == user.Id).Include(r => r.Films).FirstOrDefault();
+            var result = await _reservationService.GetAll();
+            
             var resultViewModel = _mapper.Map<ReservationForUserResponse>(result);
 
             return Ok(resultViewModel);

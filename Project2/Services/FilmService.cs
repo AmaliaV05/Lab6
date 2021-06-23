@@ -34,27 +34,22 @@ namespace Project2.Services
             var query_v2 = _context.Films
                 .Where(f => f.Id == id)
                 .Include(f => f.Comments);
-                //.Select(f => _mapper.Map<FilmWithCommentViewModel>(f));
-
-            //_logger.LogInformation(query_v2.ToQueryString());
 
             return query_v2.ToList();
         }
 
         public IEnumerable<Film> GetAllFilmsBetweenDates(DateTime firstDate, DateTime lastDate)
         {
-            var filmList = _context.Films.Where(f => f.DateAdded >= firstDate && f.DateAdded <= lastDate).ToList();
+            var filmListSorted = _context.Films.Where(f => f.DateAdded >= firstDate && f.DateAdded <= lastDate);
 
-            var filmListSorted = filmList.Where(film => film.DateAdded >= firstDate && film.DateAdded <= lastDate).ToList();
-
-            return filmListSorted.OrderByDescending(film => film.YearOfRelease).ToList();
+            return filmListSorted.OrderByDescending(film => film.YearOfRelease);
         }
 
         public IEnumerable<Film> FilterFilmsByGenre(Genre genre)
         {
-            var filmList = _context.Films.Where(film => film.Genre == genre).ToList();
+            var filmList = _context.Films.Where(film => film.Genre == genre);
 
-            var filmListSorted = filmList.OrderByDescending(film => film.YearOfRelease).ToList();
+            var filmListSorted = filmList.OrderByDescending(film => film.YearOfRelease);
 
             return filmListSorted;
         }
@@ -82,22 +77,8 @@ namespace Project2.Services
             return true;
         }
 
-        public async Task<bool> PutComment(int idFilm, int idComment, Comment comment)
-        {
-            var film = _context.Films.Where(p => p.Id == idFilm)
-                                    .Include(p => p.Comments)
-                                    .FirstOrDefault();
-
-            if (idFilm != film.Id)
-            {
-                return false;
-            }
-
-            if (idComment != comment.Id)
-            {
-                return false;
-            }
-
+        public async Task<bool> PutComment(int idFilm, long idComment, Comment comment)
+        {           
             _context.Entry(comment).State = EntityState.Modified;
 
             try
@@ -140,13 +121,6 @@ namespace Project2.Services
             _context.Entry(film).State = EntityState.Modified;
             _context.SaveChanges();
 
-            /*comment.Film = _context.Films.Find(id);
-            if(comment.Film == null)
-            {
-                return NotFound();
-            }
-            _context.Comments.Add(comment);
-            _context.SaveChanges();*/
             return true;
         }
 
@@ -164,7 +138,7 @@ namespace Project2.Services
             return true;
         }
 
-        public async Task<bool> DeleteComment(int idFilm, int idComment)
+        public async Task<bool> DeleteComment(int idFilm, long idComment)
         {
             var film = await _context.Films.FindAsync(idFilm);
             var comment = await _context.Comments.FindAsync(idComment);
@@ -190,7 +164,7 @@ namespace Project2.Services
             return _context.Films.Any(e => e.Id == id);
         }
 
-        private bool CommentExists(int id)
+        private bool CommentExists(long id)
         {
             return _context.Comments.Any(e => e.Id == id);
         }

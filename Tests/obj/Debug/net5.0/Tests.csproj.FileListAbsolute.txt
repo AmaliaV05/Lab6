@@ -243,3 +243,4 @@ D:\Projects\Projects .NET\Lab6\Tests\obj\Debug\net5.0\Tests.dll
 D:\Projects\Projects .NET\Lab6\Tests\obj\Debug\net5.0\ref\Tests.dll
 D:\Projects\Projects .NET\Lab6\Tests\obj\Debug\net5.0\Tests.pdb
 D:\Projects\Projects .NET\Lab6\Tests\obj\Debug\net5.0\Tests.genruntimeconfig.cache
+D:\Projects\Projects .NET\Lab6\Tests\bin\Debug\net5.0\Project2.StaticWebAssets.xml

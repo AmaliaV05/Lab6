@@ -109,6 +109,7 @@ namespace Project2
 
             services.AddTransient<IAuthManagementService, AuthManagementService>();// or add scope
             services.AddTransient<IFilmService, FilmService>();
+            services.AddTransient<IReservationService, ReservationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

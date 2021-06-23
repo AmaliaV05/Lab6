@@ -59,7 +59,7 @@ namespace Project2.Services
 
             var user = await _context.ApplicationUsers.FindAsync(userId);
 
-            var result = _context.Reservations.Where(r => r.ApplicationUser.Id == user.Id).Include(r => r.Films).FirstOrDefault();
+            var result = _context.Reservations.Where(r => r.ApplicationUser.Id == userId).Include(r => r.Films).FirstOrDefault();
            
             return result;
         }

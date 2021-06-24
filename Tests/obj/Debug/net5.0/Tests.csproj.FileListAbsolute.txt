@@ -233,7 +233,6 @@ D:\Projects\Projects .NET\Lab6\Tests\bin\Debug\net5.0\runtimes\win\lib\netstanda
 D:\Projects\Projects .NET\Lab6\Tests\bin\Debug\net5.0\Project2.dll
 D:\Projects\Projects .NET\Lab6\Tests\bin\Debug\net5.0\Project2.pdb
 D:\Projects\Projects .NET\Lab6\Tests\bin\Debug\net5.0\Project2.xml
-D:\Projects\Projects .NET\Lab6\Tests\obj\Debug\net5.0\Tests.csprojAssemblyReference.cache
 D:\Projects\Projects .NET\Lab6\Tests\obj\Debug\net5.0\Tests.GeneratedMSBuildEditorConfig.editorconfig
 D:\Projects\Projects .NET\Lab6\Tests\obj\Debug\net5.0\Tests.AssemblyInfoInputs.cache
 D:\Projects\Projects .NET\Lab6\Tests\obj\Debug\net5.0\Tests.AssemblyInfo.cs
@@ -243,4 +242,5 @@ D:\Projects\Projects .NET\Lab6\Tests\obj\Debug\net5.0\Tests.dll
 D:\Projects\Projects .NET\Lab6\Tests\obj\Debug\net5.0\ref\Tests.dll
 D:\Projects\Projects .NET\Lab6\Tests\obj\Debug\net5.0\Tests.pdb
 D:\Projects\Projects .NET\Lab6\Tests\obj\Debug\net5.0\Tests.genruntimeconfig.cache
-D:\Projects\Projects .NET\Lab6\Tests\bin\Debug\net5.0\Project2.StaticWebAssets.xml
+D:\Projects\Projects .NET\Lab6\Tests\bin\Debug\net5.0\web.config
+D:\Projects\Projects .NET\Lab6\Tests\obj\Debug\net5.0\Tests.csproj.AssemblyReference.cache

@@ -23,5 +23,12 @@ namespace Project2.ViewModels.Authentication
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]*/
         public string ConfirmPassword { get; set; }
+
+        public RegisterRequest(string Email, string Password, string ConfirmPassword)
+        {
+            this.Email = Email;
+            this.Password = Password;
+            this.ConfirmPassword = ConfirmPassword;
+        }
     }
 }

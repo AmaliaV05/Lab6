@@ -10,3 +10,12 @@ export class Film {
   rating: number;
   watched: string;
 }
+
+export class PaginatedFilms {
+  firstPages: number[];
+  lastPages: number[];
+  previousPages: number[];
+  nextPages: number[];
+  totalEntities: number;
+  entities: Film[];
+}

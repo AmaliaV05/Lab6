@@ -10,6 +10,8 @@ using Project2.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Project2.Services;
 using Microsoft.AspNetCore.Http;
+using Project2.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Project2.Controllers
 {
@@ -21,6 +23,7 @@ namespace Project2.Controllers
         private IFilmService _filmService;
         private readonly IMapper _mapper;
         private readonly ILogger<FilmController> _logger;
+        private readonly ApplicationDbContext _context;
 
         public FilmController(IFilmService filmService, IMapper mapper, ILogger<FilmController> logger)
         {
@@ -34,7 +37,7 @@ namespace Project2.Controllers
         /// </summary>
         /// <returns>Returns all films</returns>
         // GET: api/Film
-        [AllowAnonymous]
+        /*[AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -43,7 +46,7 @@ namespace Project2.Controllers
             var films = await _filmService.GetAllFilms();
             
            return films.ToList();
-        }
+        }*/
 
         /// <summary>
         /// Get film by id
@@ -66,6 +69,28 @@ namespace Project2.Controllers
             var filmViewModel = _mapper.Map<FilmViewModel>(film);
 
             return filmViewModel;
+        }
+
+        /// <summary>
+        /// Get all films by year of release
+        /// </summary>
+        /// <param name="yearOfRelease"></param>
+        /// <param name="page"></param>
+        /// <param name="perPage"></param>
+        /// <returns></returns>
+        // GET: api/Product
+        [AllowAnonymous]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<PaginatedResultSet<Film>>> GetFilms(int? yearOfRelease, int? page = 1, int? perPage = 20)
+        {
+            var entities = await _filmService.GetFilms(yearOfRelease, page, perPage);
+
+            int count = await _filmService.GetFilmsCount(yearOfRelease);
+            
+            var resultSet = new PaginatedResultSet<Film>(entities, page.Value, count, perPage.Value);
+            return resultSet;
         }
 
         /// <summary>

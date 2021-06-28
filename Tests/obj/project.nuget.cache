@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "6P8+TBxweR9Tr6TwCChvsJPENksyIabPEXNpTCsIs9L+Z2ZOlXOtxNtzOA9pDjQo/H2pl42EKv249HnrOQNxAg==",
+  "dgSpecHash": "dcLhBpkpdAC4awOD1Z+GZbQl7vpA58HgZ1t4d8Tn5qupLlj9ETNxEPpVHZjjRcAiJWBS+31IqVX2nNy/ZhF1aw==",
   "success": true,
   "projectFilePath": "D:\\Projects\\Projects .NET\\Lab6\\Tests\\Tests.csproj",
   "expectedPackageFiles": [
@@ -93,6 +93,7 @@
     "C:\\Users\\Asus\\.nuget\\packages\\nunit\\3.13.2\\nunit.3.13.2.nupkg.sha512",
     "C:\\Users\\Asus\\.nuget\\packages\\nunit3testadapter\\4.0.0\\nunit3testadapter.4.0.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\runtime.native.system\\4.3.0\\runtime.native.system.4.3.0.nupkg.sha512",
+    "C:\\Users\\Asus\\.nuget\\packages\\selenium.webdriver\\3.141.0\\selenium.webdriver.3.141.0.nupkg.sha512",
     "C:\\Users\\Asus\\.nuget\\packages\\swashbuckle.aspnetcore\\6.1.4\\swashbuckle.aspnetcore.6.1.4.nupkg.sha512",
     "C:\\Users\\Asus\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.1.4\\swashbuckle.aspnetcore.swagger.6.1.4.nupkg.sha512",
     "C:\\Users\\Asus\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.1.4\\swashbuckle.aspnetcore.swaggergen.6.1.4.nupkg.sha512",

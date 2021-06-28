@@ -17,9 +17,40 @@ namespace Project2.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<Film>> GetAllFilms()
+        /* public async Task<IEnumerable<Film>> GetAllFilms()
+         {
+             return await _context.Films.ToListAsync();
+         }*/
+
+        public async Task<List<Film>> GetFilms(int? yearOfRelease, int? page = 1, int? perPage = 20)
         {
-            return await _context.Films.ToListAsync();
+            if (page == null || page < 1)
+            {
+                page = 1;
+            }
+            if (perPage == null || perPage > 100)
+            {
+                perPage = 20;
+            }
+
+            if (yearOfRelease == null)
+            {
+                yearOfRelease = int.MinValue;
+            }
+
+            var entities = await _context.Films
+                .Where(p => p.YearOfRelease == yearOfRelease)
+                .OrderBy(p => p.Id)
+                .Skip((page.Value - 1) * perPage.Value)
+                .Take(perPage.Value)
+                .ToListAsync();
+            return entities;
+        }
+
+        public async Task<int> GetFilmsCount(int? yearOfRelease)
+        {            
+            int count = await _context.Films.Where(p => p.YearOfRelease == yearOfRelease).CountAsync();
+            return count;
         }
 
         public async Task<Film> GetFilmById(int id)

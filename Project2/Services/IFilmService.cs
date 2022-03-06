@@ -8,8 +8,8 @@ namespace Project2.Services
 {
     public interface IFilmService
     {
-        //Task<IEnumerable<Film>> GetAllFilms();
-        Task<List<Film>> GetFilms(int? yearOfRelease, int? page = 1, int? perPage = 20);
+        Task<IEnumerable<Film>> GetAllFilms();
+        //Task<List<Film>> GetFilms(int? yearOfRelease, int? page = 1, int? perPage = 20);
         Task<int> GetFilmsCount(int? yearOfRelease);
         Task<Film> GetFilmById(int id);
         IEnumerable<Film> GetAllCommentsForFilm(int id);

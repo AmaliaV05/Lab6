@@ -1,6 +1,7 @@
 import { Film } from "../films/films.model";
 
 export class Reservation {
-  films: Film;
+  id: number;
+  films: Film[];
   reservationDateTime: string;
 }

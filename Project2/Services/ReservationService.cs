@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Project2.Data;
 using Project2.Models;
@@ -14,11 +15,13 @@ namespace Project2.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ReservationService(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
+        public ReservationService(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
+            _userManager = userManager;
         }
 
         public async Task<bool> MakeReservation(NewReservationRequest newReservationRequest)
@@ -58,6 +61,7 @@ namespace Project2.Services
             var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var user = await _context.ApplicationUsers.FindAsync(userId);
+            //var d = await _context.UserClaims.FindAsync();
 
             var result = _context.Reservations.Where(r => r.ApplicationUser.Id == userId).Include(r => r.Films).FirstOrDefault();
            

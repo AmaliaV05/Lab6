@@ -1,6 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Film, PaginatedFilms } from '../films.model';
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Film, Comment, PaginatedFilms } from '../films.model';
 import { FilmsService } from '../films.service';
 
 
@@ -11,22 +10,22 @@ import { FilmsService } from '../films.service';
 })
 export class FilmsListComponent {
 
-  //public films: Film[];
-  public films: PaginatedFilms;
-  currentPage: number;
+  public films: Film[]; public comments: Comment[];
+  //public films: PaginatedFilms;
+  //currentPage: number;
 
   constructor(private filmsService: FilmsService) {
     
   }
 
-/*  getFilms() {
+  getFilms() {
     this.filmsService.getFilms().subscribe(p => this.films = p);
-  }*/
+  }
 
-  getFilms(page: number = 1) {
+/*  getFilms(page: number = 1) {
     this.currentPage = page;
     this.filmsService.getFilms(page).subscribe(f => this.films = f);
-  }
+  }*/
 
   ngOnInit() {
     this.getFilms();

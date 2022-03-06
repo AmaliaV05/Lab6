@@ -17,12 +17,12 @@ namespace Project2.Services
             _context = context;
         }
 
-        /* public async Task<IEnumerable<Film>> GetAllFilms()
-         {
-             return await _context.Films.ToListAsync();
-         }*/
+        public async Task<IEnumerable<Film>> GetAllFilms()
+        {
+            return await _context.Films.ToListAsync();
+        }
 
-        public async Task<List<Film>> GetFilms(int? yearOfRelease, int? page = 1, int? perPage = 20)
+        /*public async Task<List<Film>> GetFilms(int? yearOfRelease, int? page = 1, int? perPage = 20)
         {
             if (page == null || page < 1)
             {
@@ -45,7 +45,7 @@ namespace Project2.Services
                 .Take(perPage.Value)
                 .ToListAsync();
             return entities;
-        }
+        }*/
 
         public async Task<int> GetFilmsCount(int? yearOfRelease)
         {            

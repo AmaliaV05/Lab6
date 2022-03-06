@@ -57,6 +57,7 @@
       <th>Date added</th>
       <th>Rating</th>
       <th>Watched</th>
+      <th>Comments</th>
     </tr>
   </thead>
   <tbody>
@@ -71,6 +72,15 @@
       <td>{{ film.dateAdded | date:'medium'}}</td>
       <td>{{ film.rating }}</td>
       <td>{{ film.watched }}</td>
+      <td>
+        <table>
+          <tr *ngFor="let comment of films.comments">
+            <td>{{ comment.id }}</td>
+            <td>{{ comment.text }}</td>
+            <td>{{ comment.important }}</td>
+          </tr>
+        </table>
+      </td>
     </tr>
   </tbody>
 </table>

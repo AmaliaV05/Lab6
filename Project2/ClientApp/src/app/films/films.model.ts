@@ -9,6 +9,13 @@ export class Film {
   dateAdded: string;
   rating: number;
   watched: string;
+  comment?: Comment[];
+}
+
+export class Comment {
+  id: number;
+  text: string;
+  important: string;
 }
 
 export class PaginatedFilms {

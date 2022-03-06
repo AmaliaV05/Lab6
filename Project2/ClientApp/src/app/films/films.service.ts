@@ -15,10 +15,10 @@ export class FilmsService {
     this.apiUrl = apiUrl;
   }
 
-/*  getFilms(): Observable<Film[]> {
+  getFilms(): Observable<Film[]> {
     return this.httpClient.get<Film[]>(this.apiUrl + 'film');
-  }*/
-  getFilms(page: number): Observable<PaginatedFilms> {
-    return this.httpClient.get<PaginatedFilms>(this.apiUrl + 'film', { params: { 'page': page } });
   }
+/*  getFilms(page: number): Observable<PaginatedFilms> {
+    return this.httpClient.get<PaginatedFilms>(this.apiUrl + 'film', { params: { 'page': page } });
+  }*/
 }

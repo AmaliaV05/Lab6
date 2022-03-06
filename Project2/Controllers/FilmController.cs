@@ -23,7 +23,6 @@ namespace Project2.Controllers
         private IFilmService _filmService;
         private readonly IMapper _mapper;
         private readonly ILogger<FilmController> _logger;
-        private readonly ApplicationDbContext _context;
 
         public FilmController(IFilmService filmService, IMapper mapper, ILogger<FilmController> logger)
         {
@@ -37,7 +36,7 @@ namespace Project2.Controllers
         /// </summary>
         /// <returns>Returns all films</returns>
         // GET: api/Film
-        /*[AllowAnonymous]
+        [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -46,7 +45,7 @@ namespace Project2.Controllers
             var films = await _filmService.GetAllFilms();
             
            return films.ToList();
-        }*/
+        }
 
         /// <summary>
         /// Get film by id
@@ -79,7 +78,7 @@ namespace Project2.Controllers
         /// <param name="perPage"></param>
         /// <returns></returns>
         // GET: api/Product
-        [AllowAnonymous]
+        /*[AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -91,7 +90,7 @@ namespace Project2.Controllers
             
             var resultSet = new PaginatedResultSet<Film>(entities, page.Value, count, perPage.Value);
             return resultSet;
-        }
+        }*/
 
         /// <summary>
         /// Get all comments from a film by film id

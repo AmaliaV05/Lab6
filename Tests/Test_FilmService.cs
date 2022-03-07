@@ -1,4 +1,4 @@
-using NUnit.Framework;
+/*using NUnit.Framework;
 using System;
 using Project2.Models;
 using Project2.Data;
@@ -53,4 +53,4 @@ namespace Tests
             Assert.AreEqual(2, service.GetAllFilmsBetweenDates(new DateTime(2008, 3, 1, 7, 0, 0), new DateTime(2020, 4, 1, 7, 0, 0)).ToList().Count);
         }
     }
-}
+}*/

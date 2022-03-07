@@ -1,6 +1,5 @@
 ﻿using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Project2.Models;
@@ -9,17 +8,10 @@ namespace Project2.Data
 {
     public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        //private readonly string _userName;
         public ApplicationDbContext(
             DbContextOptions options,
-            IHttpContextAccessor httpContextAccessor,
-            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
+            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions) 
         {
-            //_userName = httpContextAccessor.HttpContext.User.Identity.Name;
-            _httpContextAccessor = httpContextAccessor;
-            //_userID = userManager.GetUserId(httpContext.HttpContext.User);
-
         }
         public DbSet<Film> Films { get; set; }
         public DbSet<Comment> Comments { get; set; }

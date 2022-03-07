@@ -10,8 +10,6 @@ using Project2.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Project2.Services;
 using Microsoft.AspNetCore.Http;
-using Project2.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace Project2.Controllers
 {
